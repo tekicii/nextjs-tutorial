@@ -1,0 +1,12 @@
+stages:
+  - create-tag
+  
+create-tag:
+  stage: create-tag
+  script:
+    - export LATEST_TAG=$(git describe --abbrev=0 --tags)
+    - export VERSION=$(echo "$LATEST_TAG" | awk -F. -v OFS=. '{split($0, a, "."); a[1]++; print a[1] ".0.0"}')
+    - git tag -a "$VERSION" -m "New version: $VERSION"
+    - git push origin "$VERSION"
+  only:
+    - master
